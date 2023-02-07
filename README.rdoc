@@ -1,3 +1,0 @@
-= timesheet
-
-It's a Timesheet plugin for Redmine
