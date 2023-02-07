@@ -8,6 +8,8 @@ This plugin provides a Timesheet view of monthly work-logs of users. This plugin
 ## Screenshot
 ![](sample.png)
 
+## Required Redmine version
+3.4.6.stable or later (~4.1)
 
 ## Install
 - Move to plugins folder.
