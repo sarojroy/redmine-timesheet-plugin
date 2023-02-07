@@ -1,0 +1,122 @@
+<br/>
+<br/>
+<div>
+  <%= form_with method: :get do |form| %>
+    User:
+    <select name="user_id">
+      <% @users.each do |user| %>
+        <option value="<%= user.id %>" <%= user.id.to_s == @requested_user_id ? 'selected' : '' %> ><%= user.firstname + ' ' + user.lastname %></option>
+      <% end %>
+    </select>
+
+    Month:
+    <select name="month">
+      <option <%= @requested_month.to_i == 1 ? 'selected' : '' %> value="1">January</option>
+      <option <%= @requested_month.to_i == 2 ? 'selected' : '' %> value="2">February</option>
+      <option <%= @requested_month.to_i == 3 ? 'selected' : '' %>  value="3">March</option>
+      <option <%= @requested_month.to_i == 4 ? 'selected' : '' %>  value="4">April</option>
+      <option <%= @requested_month.to_i == 5 ? 'selected' : '' %>  value="5">May</option>
+      <option <%= @requested_month.to_i == 6 ? 'selected' : '' %>  value="6">June</option>
+      <option <%= @requested_month.to_i == 7 ? 'selected' : '' %>  value="7">July</option>
+      <option <%= @requested_month.to_i == 8 ? 'selected' : '' %>  value="8">August</option>
+      <option <%= @requested_month.to_i == 9 ? 'selected' : '' %>  value="9">September</option>
+      <option <%= @requested_month.to_i == 10 ? 'selected' : '' %>  value="10">October</option>
+      <option <%= @requested_month.to_i == 11 ? 'selected' : '' %>  value="11">November</option>
+      <option <%= @requested_month.to_i == 12 ? 'selected' : '' %>  value="12">December</option>
+    </select>
+
+    Year:
+    <input name="year" type="number" minlength="4" maxlength="4" value="<%= @requested_year ? @requested_year : '2023' %>">
+    <%= form.submit('Submit') %>
+  <% end %>
+</div>
+
+<br/>
+<br/>
+
+<style>
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+
+  tr.bg-gray {
+    background: #3e5b76;
+    color: white;
+  }
+
+  #table_timesheet td.text-left {
+    text-align: left;
+  }
+
+  #table_timesheet td.text-center {
+    text-align: center;
+  }
+
+  .holiday {
+    background: #d3d3d3;
+  }
+
+</style>
+
+Timesheet for <b><%= @requested_user %></b> for the month of
+<b><%= Date::MONTHNAMES[@requested_month.to_i] %>, <%= @requested_year %></b>
+<br/><br/>
+
+<table id="table_timesheet" class="list odd-even time-entries table-timesheet">
+  <thead>
+  <tr>
+    <th class="text-left task-description">Task Description</th>
+    <% @timesheet_report.get_dates().each do |date| %>
+      <th class="text-center work-date {{ column_class }}"
+          title=""><%= Date.parse(date).strftime('%d') %></th>
+    <% end %>
+    <th class="text-center work-date">∑</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @timesheet_report.get_projects().each do |project| %>
+    <tr class="bg-gray">
+      <td style="min-width: 100px;padding: 5px;" class="text-left"><b><%= project[1] %></b>
+      </td>
+      <td colspan="<%= @timesheet_report.get_dates().count() + 1 %>"></td>
+    </tr>
+    <% @timesheet_report.get_tasks(project[0]).each do |task| %>
+      <tr>
+        <td class="text-left">
+          <a href="<%= '/issues/' + task[0].to_s %>" target="_blank">
+            <%= task[0].to_s + '. ' + task[1] %>
+          </a>
+        </td>
+
+        <% @timesheet_report.get_dates().each do |formattedDate| %>
+          <% column_class = '' %>
+          <% if @timesheet_report.is_weekend(formattedDate) %>
+            <% column_class = 'holiday' %>
+          <% end %>
+          <td class="text-center <%= column_class %>  }}">
+            <% hoursWorked = @timesheet_report.get_work_hours_by_date_and_task(formattedDate, task[0]) %>
+            <% if hoursWorked %>
+              <a href="<%= '/issues/' + task[0].to_s %>" target="_blank">
+                <%= number_with_precision(hoursWorked, precision: 1) %>
+              </a>
+            <% end %>
+          </td>
+        <% end %>
+        <th class="text-center">
+          <%= number_with_precision(@timesheet_report.get_total_by_task_id(task[0]), precision: 2) %>
+        </th>
+      </tr>
+    <% end %>
+  <% end %>
+  <tr>
+    <th class="text-right">∑ hours</th>
+    <% @timesheet_report.get_dates().each do |date| %>
+      <th class="text-center">
+        <%= number_with_precision(@timesheet_report.get_total_by_date(date), precision: 1) %>
+      </th>
+    <% end %>
+    <th class="text-center"><%= number_with_precision(@timesheet_report.get_total_hours(), precision: 2) %></th>
+  </tr>
+  </tbody>
+</table>
