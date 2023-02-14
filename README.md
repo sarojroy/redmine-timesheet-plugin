@@ -1,4 +1,4 @@
-# Redmine Timesheet plugin
+# Redmine Timesheet Plugin
 This plugin provides a Timesheet view of monthly work-logs of users. This plugin was initially developed for personal use. It's inspired by the Jira Tempo timesheet report.
 
 ## Features
@@ -13,7 +13,7 @@ This plugin provides a Timesheet view of monthly work-logs of users. This plugin
 
 ## Install
 - Move to plugins folder.
-- Clone the timesheet plugin repository: `git clone git@github.com:sarojroy/timesheet.git`
+- Clone the timesheet plugin repository: `git@github.com:sarojroy/redmine-timesheet-plugin.git`
 - Restart redmine.
 
 ## Uninstall
