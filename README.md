@@ -13,7 +13,7 @@ This plugin provides a Timesheet view of monthly work-logs of users. This plugin
 
 ## Install
 - Move to plugins folder.
-- Clone the timesheet plugin repository: `git@github.com:sarojroy/redmine-timesheet-plugin.git`
+- Clone the timesheet plugin repository: `git clone git@github.com:sarojroy/redmine-timesheet-plugin.git`
 - Restart redmine.
 
 ## Uninstall
